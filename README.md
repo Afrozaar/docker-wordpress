@@ -1,3 +1,27 @@
+# Afrozaar Notes
+
+This clone is adapted to add the capabilities that comes with `wp-cli` to set up the wordpress installation and
+configure rewrite URL, custom plugins and much more.
+
+Running `./build.sh` will build 2 images (just for efficiency network-intensive package installs run in the separate
+  base image) setting up plugins and doing configuration. Lastly, an entry will be added to `/etc/hosts` to make the
+  container available at `http://docker.dev`.
+
+## Starting Up
+
+After running `./build.sh`, do:
+```
+docker run -d --name wp_build_test -p 80:80 johanmynhardt/wordpress
+```
+Then open up `http://docker.dev` in your browser.
+
+```
+username: docker
+password: docker!
+```
+
+# Original README:
+
 (note: docker-wordpress *no longer* contains an sshd. It was probably a mistake to put one in in the first place, and you can now spawn arbitrary processes with use of the [docker exec](http://blog.docker.com/2014/10/docker-1-3-signed-images-process-injection-security-options-mac-shared-directories/) command. So do that, instead, like this:
 
 ```
@@ -16,7 +40,7 @@ dial unix /var/run/docker.sock: permission denied
 when you run the below commands, simply use sudo. This is a [known issue](https://twitter.com/docker/status/366040073793323008).)
 
 
-This repo contains a recipe for making a [Docker](http://docker.io) container for Wordpress, using Linux, Apache and MySQL. 
+This repo contains a recipe for making a [Docker](http://docker.io) container for Wordpress, using Linux, Apache and MySQL.
 To build, make sure you have Docker [installed](http://www.docker.io/gettingstarted/), clone this repo somewhere, and then run:
 ```
 docker build -rm -t <yourname>/wordpress .
@@ -27,9 +51,9 @@ Or, alternately, build DIRECTLY from the github repo like some sort of AMAZING F
 docker build -rm -t <yourname>/wordpress git://github.com/jbfink/docker-wordpress.git
 ```
 
-Then run it, specifying your desired ports! Woo! 
+Then run it, specifying your desired ports! Woo!
 ```
-docker run --name wordpress -d -p <http_port>:80 <yourname>/wordpress 
+docker run --name wordpress -d -p <http_port>:80 <yourname>/wordpress
 ```
 
 
@@ -42,7 +66,7 @@ echo $(docker logs wordpress | grep password)
 (note: you won't need the mysql root or the wordpress db password normally)
 
 
-Your wordpress container should now be live, open a web browser and go to http://localhost:<http_port>, then fill out the form. No need to mess with wp-config.php, it's been auto-generated with proper values. 
+Your wordpress container should now be live, open a web browser and go to http://localhost:<http_port>, then fill out the form. No need to mess with wp-config.php, it's been auto-generated with proper values.
 
 
 You can shutdown your wordpress container like this:
