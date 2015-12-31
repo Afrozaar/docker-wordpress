@@ -9,8 +9,8 @@ ADD ./scripts/foreground.sh /etc/apache2/foreground.sh
 ADD ./configs/supervisord.conf /etc/supervisord.conf
 ADD ./configs/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN rm -rf /var/www/
-#ADD https://wordpress.org/latest.tar.gz /tmp/wordpress.tar.gz
-COPY latest.tar.gz /tmp/wordpress.tar.gz
+ADD https://wordpress.org/latest.tar.gz /tmp/wordpress.tar.gz
+#COPY latest.tar.gz /tmp/wordpress.tar.gz
 RUN tar xvzf /tmp/wordpress.tar.gz
 RUN mv /wordpress /var/www/
 ## CHMOD/OWN
@@ -24,8 +24,8 @@ EXPOSE 80
 ## do wp-config
 RUN /wp-config.sh
 ## do wp-cli setup
-#ADD https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar /usr/local/bin/wp
-COPY wp-cli.phar /usr/local/bin/wp
+ADD https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar /usr/local/bin/wp
+#COPY wp-cli.phar /usr/local/bin/wp
 RUN chmod 755 /usr/local/bin/wp
 ## do plugin installs
 WORKDIR /var/www
