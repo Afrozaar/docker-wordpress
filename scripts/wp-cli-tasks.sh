@@ -10,7 +10,14 @@ echo "wp core install..."
 wp core install --url="http://docker.dev" --title=MyDockerizedWordPress --admin_user=docker --admin_password="docker!" --admin_email=docker@docker.dev
 
 echo "Installing plugins."
-bash -c 'PLUGINS=($PLUGINS); for pl in ${PLUGINS[@]}; do echo "installing plugin $pl ..."; wp plugin install $pl; done;'
+bash -c '
+  PLUGINS=($PLUGINS);
+  for pl in ${PLUGINS[@]}; do
+    echo "installing plugin $pl ...";
+    wp plugin install $pl;
+    wp plugin activate $pl;
+  done;
+'
 echo "done installing plugins";
 
 echo "Listing plugins:"
