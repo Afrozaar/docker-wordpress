@@ -29,13 +29,11 @@ COPY wp-cli.phar /usr/local/bin/wp
 RUN chmod 755 /usr/local/bin/wp
 ## do plugin installs
 WORKDIR /var/www
-USER www-data
-RUN whoami
-RUN wp --info
+RUN wp --allow-root --info
 WORKDIR /
-USER root
-RUN sed -i -e 's#/usr/sbin/nologin#/bin/sh#' /etc/passwd
+RUN sed -i -e 's#www-data:/var/www:/usr/sbin/nologin#www-data:/var/www:/bin/sh#' /etc/passwd
 RUN /wp-cli-tasks.sh
+RUN sed -i -e 's#www-data:/var/www:/bin/sh#www-data:/var/www:/usr/sbin/nologin#' /etc/passwd
 
 # start
 CMD ["/bin/bash", "/start.sh"]
