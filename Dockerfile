@@ -1,20 +1,41 @@
-FROM ubuntu:latest
-MAINTAINER John Fink <john.fink@gmail.com>
-RUN apt-get update # Fri Oct 24 13:09:23 EDT 2014
-RUN apt-get -y upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mysql-client mysql-server apache2 libapache2-mod-php5 pwgen python-setuptools vim-tiny php5-mysql  php5-ldap
-RUN easy_install supervisor
+## johanmynhardt/wordpress
+FROM johanmynhardt/ubuntu-mysql-apache-php
+MAINTAINER Johan Mynhardt <johan.mynhardt@gmail.com>
+COPY ./scripts/wp-*.sh /
+#ADD ./scripts/wp-config.sh /wp-config.sh
+#ADD ./scripts/wp-cli-tasks.sh /wp-cli-tasks.sh
 ADD ./scripts/start.sh /start.sh
 ADD ./scripts/foreground.sh /etc/apache2/foreground.sh
 ADD ./configs/supervisord.conf /etc/supervisord.conf
 ADD ./configs/000-default.conf /etc/apache2/sites-available/000-default.conf
 RUN rm -rf /var/www/
-ADD https://wordpress.org/latest.tar.gz /wordpress.tar.gz
-RUN tar xvzf /wordpress.tar.gz 
+#ADD https://wordpress.org/latest.tar.gz /tmp/wordpress.tar.gz
+COPY latest.tar.gz /tmp/wordpress.tar.gz
+RUN tar xvzf /tmp/wordpress.tar.gz
 RUN mv /wordpress /var/www/
+## CHMOD/OWN
 RUN chown -R www-data:www-data /var/www/
+RUN chmod 755 /wp-config.sh
+RUN chmod 755 /wp-cli-tasks.sh
 RUN chmod 755 /start.sh
 RUN chmod 755 /etc/apache2/foreground.sh
 RUN mkdir /var/log/supervisor/
 EXPOSE 80
+## do wp-config
+RUN /wp-config.sh
+## do wp-cli setup
+#ADD https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar /usr/local/bin/wp
+COPY wp-cli.phar /usr/local/bin/wp
+RUN chmod 755 /usr/local/bin/wp
+## do plugin installs
+WORKDIR /var/www
+USER www-data
+RUN whoami
+RUN wp --info
+WORKDIR /
+USER root
+RUN sed -i -e 's#/usr/sbin/nologin#/bin/sh#' /etc/passwd
+RUN /wp-cli-tasks.sh
+
+# start
 CMD ["/bin/bash", "/start.sh"]
