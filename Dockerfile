@@ -1,5 +1,5 @@
-## johanmynhardt/wordpress
-FROM johanmynhardt/ubuntu-mysql-apache-php
+## afrozaar/wordpress
+FROM afrozaar/ubuntu-mysql-apache-php
 MAINTAINER Johan Mynhardt <johan.mynhardt@gmail.com>
 COPY ./scripts/wp-*.sh /
 #ADD ./scripts/wp-config.sh /wp-config.sh

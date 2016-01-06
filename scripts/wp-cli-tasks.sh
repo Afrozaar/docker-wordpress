@@ -2,11 +2,11 @@
 /usr/bin/mysqld_safe & sleep 10s
 cd /var/www
 
-PLUGINS=(rest-api wp-basic-auth)
+. /wp-plugins.sh
 
 sudo -u www-data -i env PLUGINS="`echo ${PLUGINS[@]}`" sh <<'EOF'
 echo "Running wp-cli commands in `pwd` as `whoami`"
-echo "wp core install..."
+echo "wp-cli core install:"
 wp core install --url="http://docker.dev" --title=MyDockerizedWordPress --admin_user=docker --admin_password="docker!" --admin_email=docker@docker.dev
 
 echo "Installing plugins."
@@ -18,7 +18,12 @@ bash -c '
     wp plugin activate $pl;
   done;
 '
-echo "done installing plugins";
+
+if [ -f /wp-cli-plugins-extra.sh ]; then
+  . /wp-cli-plugins-extra.sh
+fi
+
+echo "Done installing plugins.";
 
 echo "Listing plugins:"
 wp plugin list
