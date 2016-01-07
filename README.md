@@ -11,7 +11,7 @@ Running `./build.sh` will build 2 images (just for efficiency network-intensive 
 
 After running `./build.sh`, do:
 ```
-docker run -d --name wp_build_test -p 80:80 johanmynhardt/wordpress
+docker run -d --name wp_build_test -p 80:80 afrozaar/wordpress:latest
 ```
 Then open up `http://docker.dev` in your browser.
 
