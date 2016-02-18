@@ -20,6 +20,25 @@ username: docker
 password: docker!
 ```
 
+### Running on a non-standard port
+More likely than not, it is desireable to run on a non-standard port, if for example,
+you want to run multiple wordpress sites each in its own container.
+
+To achieve this, the following recipe works its magic by creating a new container
+mapping it to a specific port, and updating the wordpress configuration with the
+intended port.
+
+* Create container mapping to a particular port:
+```
+docker run -d --name wp_p_5000 -p 5000:80 afrozaar/wordpress
+```
+
+* Update the configuration to point to the port configuration:
+```
+docker exec -it wp_p_5000 wp --path='/var/www' --allow-root option update siteurl "http://docker.dev:5000"
+docker exec -it wp_p_5000 wp --path='/var/www' --allow-root option update home "http://docker.dev:5000"
+```
+
 # Original README:
 
 (note: docker-wordpress *no longer* contains an sshd. It was probably a mistake to put one in in the first place, and you can now spawn arbitrary processes with use of the [docker exec](http://blog.docker.com/2014/10/docker-1-3-signed-images-process-injection-security-options-mac-shared-directories/) command. So do that, instead, like this:
