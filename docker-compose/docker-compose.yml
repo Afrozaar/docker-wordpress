@@ -1,0 +1,15 @@
+wordpress:
+  image: afrozaar/wordpress
+#  links:
+#    - db:mysql
+  ports:
+    - 3000:80
+  volumes:
+    - /home/johan/workspace/website-baobabsuite-demo/wp-content/plugins:/var/www/wp-content/plugins
+    - /home/johan/workspace/website-baobabsuite-demo/wp-content/themes:/var/www/wp-content/themes
+    - ./post-startup-config.sh:/post-startup-config.sh
+  environment:
+    - SITE_URL=http://localhost:3000
+    - WP_PATH=/var/www
+    - WP_THEME=baobabdemo
+  command: sh post-startup-config.sh
